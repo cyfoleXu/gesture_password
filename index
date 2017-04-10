@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,height=device-height,initial-scale=1.0,user-scalable=no">
+    <title>手势密码</title>
+    <link type="text/css" rel="stylesheet" href="css/style.css"/>
+</head>
+<body>
+    <div class="head"></div>
+    <div id="gesturePassword" ></div>
+    <div id="message"></div>
+    <div class="bottom">
+        <p>
+            <input type="radio" name="password" onclick="set()" >设置密码<br/>
+        </p>
+        <p>
+            <input type="radio"  name="password"onclick="identify()">验证密码
+        </p>
+    </div>
+<script type="text/javascript" src="js/password.js"></script>
+<script type="text/javascript">
+    var p = new GesturePassword('gesturePassword',{
+        circle: {
+            sizeScale: 0.9,
+            default: {
+                strokeStyle: '#C6C6C6'
+            }
+        },
+        line: {
+            lineWidth: 3,
+            default: {
+                strokeStyle: '#DF3D41'
+            }
+
+        },
+        dot: {
+            size: 8,
+            default: {
+                fillStyle: '#E84A20'
+            }
+        }
+    });
+    var msg = document.getElementById('message'),password;
+    var storage=window.localStorage;
+    function set(){
+        p.eventListener();
+        msg.innerHTML='请输入手势密码';
+        p.on('complete',function(result){
+            if(password){
+                if(password === result){
+                    msg.innerHTML = '密码设置成功';
+                    storage.pwd=password;
+                    msg.classList.add('right')
+                   // p.setRight();
+                }else{
+                    msg.innerHTML = '两次输入的不一致';
+                    msg.classList.add('error')
+                   // p.setWrong();
+                }
+
+                setTimeout(function(){
+                    p.reset();
+                    msg.innerHTML = '';
+                    msg.className = '';
+                    password = false;
+                },1500);
+
+            }else{//第一次输入时
+                password = result;
+                if(password.length<5){
+                    msg.innerHTML='密码太短,至少需要5个点';
+                    password=false;
+                }else{
+                    msg.innerHTML = '请再次输入手势密码';
+                }
+                setTimeout(function(){
+                    p.reset();
+                },500);
+
+
+            }
+        });
+    }
+    function identify(){
+        msg.innerHTML='请输入手势密码';
+        p.off('complete',{});
+        p.on('complete',function(result){
+            if(storage.pwd){
+                if(storage.pwd === result){
+                    msg.innerHTML = '密码正确';
+                    msg.classList.add('right')
+                    // p.setRight();
+                }else{
+                    msg.innerHTML = '输入密码不正确';
+                    msg.classList.add('error')
+                    // p.setWrong();
+                    setTimeout(function(){
+                        p.reset();
+                    },500);
+                }
+
+                setTimeout(function(){
+                    p.reset();
+                    msg.innerHTML = '';
+                    msg.className = '';
+                    password = false;
+                },1500);
+
+            }
+        });
+    }
+</script>
+</body>
+</html>
