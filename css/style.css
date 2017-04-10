@@ -1,1 +1,23 @@
+html,body{
+    margin:0px;
+    height:100%;
+    background-color:#F0F0F2;
+    font-size:20px;
+}
 
+#message {
+    height:100px;
+    text-align:center;
+    padding:20px 0px ;
+    box-sizing: border-box;
+}
+
+.bottom p{
+    text-align:center;
+    margin:20px 0px;
+}
+
+#gesturePassword{
+    max-width:540px;
+    margin:30px  auto 0px;
+}
